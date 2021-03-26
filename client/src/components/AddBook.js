@@ -1,47 +1,61 @@
-import React from 'react';
-import { gql, useQuery, useMutation } from '@apollo/client';
+import React, { useState } from 'react';
+import { useQuery, useMutation } from '@apollo/client';
 
-const getAuthorsQuery = gql`
-	{
-		authors {
-			name
-			id
-		}
-	}
-`;
+import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../queries/queries';
 
 const AddBook = () => {
-	const { loading, error, data } = useQuery(getAuthorsQuery);
-    //  console.log(data?.authors)
-    const displayAuthors = ()=>{
-        if(loading){
-            return(
-                <option disabled>Loading Authors...</option>
-            )
-        }else{
-            return data.authors.map(author =>(
-                <option key={author.id} value={author.id}>{author.name}</option>
-            ))
-        }
-    }
+	const [book, setBook] = useState({ name: '', genre: '', authorId: '' });
+	const { loading, data } = useQuery(getAuthorsQuery);
+	const [addBook] = useMutation(addBookMutation);
+
+	//  console.log(data?.authors)
+	const displayAuthors = () => {
+		if (loading) {
+			return <option disabled>Loading Authors...</option>;
+		} else {
+			return data.authors.map((author) => (
+				<option key={author.id} value={author.id}>
+					{author.name}
+				</option>
+			));
+		}
+	};
+	const handleChange = (e) => {
+		setBook({ ...book, [e.target.name]: e.target.value });
+		//console.log(book)
+	};
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		//console.log(book)
+
+		addBook({
+			variables: {
+				name: book.name,
+				genre: book.genre,
+				authorId: book.authorId,
+			},
+			refetchQueries:[{query:getBooksQuery}]
+		});
+		setBook({ name: '', genre: '', authorId: '' });
+	};
 	return (
-		<form id="add-book">
+		<form id="add-book" onSubmit={handleSubmit}>
 			<div className="field">
 				<label>Book name:</label>
-				<input type="text" />
+				<input required type="text" name="name" value={book.name} onChange={handleChange} />
 			</div>
 			<div className="field">
 				<label>Genre:</label>
-				<input type="text" />
+				<input required type="text" name="genre" value={book.genre} onChange={handleChange} />
 			</div>
 			<div className="field">
 				<label>Author:</label>
-				<select>
+				<select required name="authorId" value={book.authorId} onChange={handleChange}>
 					<option>Select author</option>
 					{displayAuthors()}
 				</select>
 			</div>
-			<button>+</button>
+			<button type="submit">+</button>
 		</form>
 	);
 };
