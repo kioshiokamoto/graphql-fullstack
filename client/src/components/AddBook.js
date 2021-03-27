@@ -22,11 +22,9 @@ const AddBook = () => {
 	};
 	const handleChange = (e) => {
 		setBook({ ...book, [e.target.name]: e.target.value });
-		//console.log(book)
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		//console.log(book)
 
 		addBook({
 			variables: {
@@ -34,7 +32,7 @@ const AddBook = () => {
 				genre: book.genre,
 				authorId: book.authorId,
 			},
-			refetchQueries:[{query:getBooksQuery}]
+			refetchQueries: [{ query: getBooksQuery }],
 		});
 		setBook({ name: '', genre: '', authorId: '' });
 	};

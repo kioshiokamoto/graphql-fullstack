@@ -6,7 +6,7 @@ import AddBook from './components/AddBook';
 
 const client = new ApolloClient({
 	uri: 'http://localhost:5000/graphql',
-  cache: new InMemoryCache()
+	cache: new InMemoryCache(),
 });
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
 			<div id="main">
 				<h1>Aprendiendo GQL Reading List</h1>
 				<BookList />
-        <AddBook />
+				<AddBook />
 			</div>
 		</ApolloProvider>
 	);

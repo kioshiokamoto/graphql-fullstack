@@ -1,15 +1,14 @@
-import { useQuery } from '@apollo/client';
 import React from 'react';
+import { useQuery } from '@apollo/client';
 import { getBookQuery } from '../queries/queries';
 
 const BookDetails = ({ bookId }) => {
-	const { loading, error, data } = useQuery(getBookQuery, {
+	const { loading, data } = useQuery(getBookQuery, {
 		variables: { id: bookId },
 	});
 	if (loading) {
-		return <div>Loading...</div>;
+		return <div id="book-details">Loading...</div>;
 	}
-	//console.log(data);
 
 	return (
 		<div id="book-details">
